@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace OrnekProje
 {
-    public partial class Form1 : Form
+    public partial class FrmStokEkstre : Form
     {
-        public Form1()
+        public FrmStokEkstre()
         {
             InitializeComponent();
         }
