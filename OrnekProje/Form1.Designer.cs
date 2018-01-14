@@ -37,6 +37,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnTextExport = new System.Windows.Forms.Button();
+            this.btnPdfExport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdCtrEkstre)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
@@ -61,30 +63,30 @@
             this.txtBaslangicTarih.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBaslangicTarih.Location = new System.Drawing.Point(12, 30);
             this.txtBaslangicTarih.Name = "txtBaslangicTarih";
-            this.txtBaslangicTarih.Size = new System.Drawing.Size(100, 23);
+            this.txtBaslangicTarih.Size = new System.Drawing.Size(148, 23);
             this.txtBaslangicTarih.TabIndex = 1;
             this.txtBaslangicTarih.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtBitisTarih
             // 
             this.txtBitisTarih.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBitisTarih.Location = new System.Drawing.Point(118, 30);
+            this.txtBitisTarih.Location = new System.Drawing.Point(166, 30);
             this.txtBitisTarih.Name = "txtBitisTarih";
-            this.txtBitisTarih.Size = new System.Drawing.Size(100, 23);
+            this.txtBitisTarih.Size = new System.Drawing.Size(118, 23);
             this.txtBitisTarih.TabIndex = 2;
             this.txtBitisTarih.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtMalKodu
             // 
             this.txtMalKodu.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMalKodu.Location = new System.Drawing.Point(224, 30);
+            this.txtMalKodu.Location = new System.Drawing.Point(312, 30);
             this.txtMalKodu.Name = "txtMalKodu";
             this.txtMalKodu.Size = new System.Drawing.Size(237, 23);
             this.txtMalKodu.TabIndex = 3;
             // 
             // btnListele
             // 
-            this.btnListele.Location = new System.Drawing.Point(467, 30);
+            this.btnListele.Location = new System.Drawing.Point(555, 30);
             this.btnListele.Name = "btnListele";
             this.btnListele.Size = new System.Drawing.Size(75, 23);
             this.btnListele.TabIndex = 4;
@@ -97,33 +99,55 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
+            this.label1.Size = new System.Drawing.Size(148, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Başlangıç Tarihi:";
+            this.label1.Text = "Başlangıç Tarihi (2018.01.01):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(118, 14);
+            this.label2.Location = new System.Drawing.Point(163, 14);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.Size = new System.Drawing.Size(121, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Bitiş Tarihi:";
+            this.label2.Text = "Bitiş Tarihi (2018.01.02):";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(220, 14);
+            this.label3.Location = new System.Drawing.Point(308, 14);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Mal Kodu:";
+            // 
+            // btnTextExport
+            // 
+            this.btnTextExport.Location = new System.Drawing.Point(699, 30);
+            this.btnTextExport.Name = "btnTextExport";
+            this.btnTextExport.Size = new System.Drawing.Size(75, 23);
+            this.btnTextExport.TabIndex = 8;
+            this.btnTextExport.Text = ".txt Export";
+            this.btnTextExport.UseVisualStyleBackColor = true;
+            this.btnTextExport.Click += new System.EventHandler(this.btnTextExport_Click);
+            // 
+            // btnPdfExport
+            // 
+            this.btnPdfExport.Location = new System.Drawing.Point(780, 30);
+            this.btnPdfExport.Name = "btnPdfExport";
+            this.btnPdfExport.Size = new System.Drawing.Size(75, 23);
+            this.btnPdfExport.TabIndex = 9;
+            this.btnPdfExport.Text = ".pdf Export";
+            this.btnPdfExport.UseVisualStyleBackColor = true;
+            this.btnPdfExport.Click += new System.EventHandler(this.btnPdfExport_Click);
             // 
             // FrmStokEkstre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(867, 567);
+            this.Controls.Add(this.btnPdfExport);
+            this.Controls.Add(this.btnTextExport);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -153,6 +177,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnTextExport;
+        private System.Windows.Forms.Button btnPdfExport;
     }
 }
 

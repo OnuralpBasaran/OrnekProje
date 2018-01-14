@@ -1,0 +1,84 @@
+
+CREATEPROCEDURE sp_StokEkstre
+
+	--Altta bulunan tanimlamar stored procedure de  kullanmak için gerekli olan paremetrelerdir.
+	@BaslangicTarihi INT,
+	@BitisTarihi INT,
+	@MalKodu VARCHAR(30),
+	@MalAdi VARCHAR(50)
+
+AS
+	--Bu islem procedure'ün sonucu olarak bize geri dönecek tablonun yani geçici tablo (temp table) nun olusturulmasini saglar.
+	CREATE TABLE #tmp_STE
+	(
+	   SiraNo INT,
+	   IslemTur SMALLINT,
+	   EvrakNo VARCHAR(16),
+	   Tarih INT,
+	   Miktar NUMERIC(25,6),
+	   StokMiktar NUMERIC(25,6)
+	)
+
+	--Buradaki tanimlamalar ise  stok miktarin hesaplanmasi için kullanilan cursor için çekilen alanlarin tanimlanma islemidir.
+	DECLARE @SiraNo INT
+	DECLARE @Islemtur SMALLINT
+	DECLARE @EvrakNo VARCHAR(16)
+	DECLARE @Tarih INT
+	DECLARE @Miktar NUMERIC(25,6)
+	DECLARE @StokMiktar NUMERIC(25,6)
+	
+	--Cursor islemi bu tanimlamayla baslar ve pesinden gelen sorgu cümleciyi cursorun ne için çalisacagini belirtmektedir.
+	--En basta tanimladigimiz paremetreleri kullanabilmek için STI tablosu ile STK tablosu arasinda bir JOIN olusturulmustur. Bu joinde es alanlar olarak MalKodu alani kullanilmistir.
+	--Satir sayisini Hesaplamak için ROW-RUMBER() kodu artan tarihe göre kullanildi.  
+	DECLARE crs_StokMiktar CURSOR
+	FOR
+	SELECT 
+		   ROW_NUMBER() OVER(ORDER BY Tarih) AS SiraNo,
+		   STI.IslemTur,
+		   STI.EvrakNo,
+		   STI.Tarih, 
+		   STI.Miktar
+		   FROM STI JOIN STK ON STI.MalKodu = STK.MalKodu
+	WHERE (STI.Tarih >= @BaslangicTarihi AND STI.Tarih <= @BitisTarihi) OR (STK.MalKodu LIKE @MalKodu+'%' OR STK.MalAdi LIKE @MalAdi+'%') ORDER BY Tarih
+
+	-- Stok Miktari için tanimlanan cursor islemi basladi.
+	OPEN crs_StokMiktar
+
+	-- Deger atama islemi hiç isleme girmese bile stokmiktar alaninin 0 degerini almasini saglamaktadir.
+	SET @StokMiktar = 0
+
+	--Yukarda olusturdugumuz sorgu cümleciginin baslangiçta ilk kaydini getirmektedir.
+	FETCH NEXT FROM crs_StokMiktar INTO  @SiraNo, @Islemtur ,@EvrakNo, @Tarih, @Miktar
+	-- Bu islem son kayit olmadigini belirtmektedir.
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		-- Bu if kosul yapisi islem durumuna göre stok miktarina miktari eklemek veya çikarma görevini yapar.
+		IF @Islemtur = 0
+			SET @StokMiktar += @Miktar
+		ELSE
+			SET @StokMiktar -= @Miktar
+
+
+			-- Basta olusturdugumuz geçici tablo (temp table) ya cursor da okunan o satiri eklemektedir.
+			INSERT INTO #tmp_STE(SiraNo, IslemTur, EvrakNo, Tarih, Miktar, StokMiktar) 
+				   VALUES (@SiraNo, @Islemtur, @EvrakNo, @Tarih, @Miktar, @StokMiktar)
+
+	FETCH NEXT FROM crs_StokMiktar INTO  @SiraNo, @Islemtur ,@EvrakNo, @Tarih, @Miktar
+	END
+
+	-- Asagida bulunan sorgu ise bize stored procedurun sonucu olarak temp table'i okuyarak düzenlenmis sekilde bir select sorgusu döndürmektedir.
+	 SELECT 
+		   ROW_NUMBER() OVER(ORDER BY Tarih) AS SiraNo,
+		   --IslemTur,
+		   IIF(IslemTur = 0, 'Giris','Çikis') AS IslemTur,
+		   EvrakNo,
+		   CONVERT(VARCHAR(15),CAST(Tarih - 2 AS datetime),104) AS Tarih, 
+		   IIF(IslemTur = 0, CONVERT(NUMERIC(25,0), Miktar), 0 ) AS GirisMiktar ,
+		   IIF(IslemTur = 1, CONVERT(NUMERIC(25,0), Miktar), 0 ) AS CikisMiktar,
+		   CONVERT(NUMERIC(25,0), StokMiktar) AS StokMiktar
+	 FROM #tmp_STE
+
+	 -- Cursor isleminin bittiginin ve hafizadan silmensini saglamasi için gerekli olan kod blogudur.
+	CLOSE crs_StokMiktar
+	DEALLOCATE crs_StokMiktar
+GO

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace OrnekProje
 {
@@ -75,7 +76,6 @@ namespace OrnekProje
                     da.Fill(dt);
 
                     grdCtrEkstre.DataSource = dt;
-                    
                 }
                 else
                 {
@@ -93,6 +93,32 @@ namespace OrnekProje
                 conn.Close();
                 conn.Dispose();
             }
+        }
+
+        private void btnTextExport_Click(object sender, EventArgs e)
+        {
+            DevExpress.XtraGrid.Views.Grid.GridView view = grdCtrEkstre.MainView as DevExpress.XtraGrid.Views.Grid.GridView;
+            if (view != null)
+                view.ExportToText("StokEkstre.txt");
+
+
+            Process pdfExport = new Process();
+            pdfExport.StartInfo.FileName = "notepad.exe";
+            pdfExport.StartInfo.Arguments = "StokEkstre.txt";
+            pdfExport.Start();
+        }
+
+        private void btnPdfExport_Click(object sender, EventArgs e)
+        {
+            DevExpress.XtraGrid.Views.Grid.GridView view = grdCtrEkstre.MainView as DevExpress.XtraGrid.Views.Grid.GridView;
+            if (view != null)
+                view.ExportToPdf("StokEkstre.pdf");
+
+
+            Process pdfExport = new Process();
+            pdfExport.StartInfo.FileName = "AcroRd32.exe";
+            pdfExport.StartInfo.Arguments = "StokEkstre.pdf";
+            pdfExport.Start();
         }
     }
 }
